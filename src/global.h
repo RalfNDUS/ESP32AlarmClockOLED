@@ -14,13 +14,10 @@
 #define MDNS_NAME    "esp32-alarmclock2"
 
 // ---- GPIO ----
-#ifdef LOLIN32_LITE
-  constexpr int BUZZER_PIN = 5;
-  #define ONE_WIRE_BUS 18
-#endif
-#ifdef WEMOS_D1_MINI32
-  constexpr int BUZZER_PIN = 18;
-#endif
+constexpr int BUZZER_PIN = 1;
+constexpr int BUTTON_PIN = 3;
+#define I2C_SDA 8
+#define I2C_SCL 9
 
 // ---- Timer-Intervalle ----
 constexpr unsigned int  BUZZER_INTERVAL_MS = 300;

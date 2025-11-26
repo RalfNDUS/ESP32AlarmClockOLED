@@ -2,10 +2,11 @@
 #include <ESPmDNS.h>
 #include "global.h"
 #include "main.h"
+#include "oled.h"
 
-#ifdef ESP32_C3_MINI
-  #include <esp_wifi.h>
-#endif
+// #ifdef ESP32_C3_MINI
+//   #include <esp_wifi.h>
+// #endif
 
 void onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info) 
 {
@@ -51,15 +52,20 @@ void onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
 }
 
 void wifiConnect() {
+  char logMsg[64];
+
+  WiFi.disconnect(true);
   WiFi.mode(WIFI_STA);
   WiFi.setSleep(false);
 #ifdef ESP32_C3_MINI
   WiFi.setTxPower(WIFI_POWER_8_5dBm);
 #endif
-  //WiFi.onEvent(onWiFiEvent);
+  WiFi.onEvent(onWiFiEvent);
 
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   DEBUG_PRINTF("Connecting %s ...\n", WIFI_SSID);
+  snprintf(logMsg, sizeof(logMsg), "Connecting %s ...\n", WIFI_SSID);
+  logPrint(logMsg);
 
   unsigned long start = millis();
   while (WiFi.status() != WL_CONNECTED && millis() - start < 30000)
@@ -67,6 +73,10 @@ void wifiConnect() {
 
   if (WiFi.status() == WL_CONNECTED)
   {
+    logPrintln("Connected to WiFi AP");
+    logPrint("IP: ");
+    logPrintln(WiFi.localIP().toString());
+
     DEBUG_PRINTLN("Connected to WiFi AP");
     DEBUG_PRINT("IP: ");
     DEBUG_PRINTLN(WiFi.localIP().toString());
@@ -74,11 +84,16 @@ void wifiConnect() {
   else
   { 
     DEBUG_PRINTLN("Connection failed!. Restart in 3 sec ...");
+    logPrintln("Connection failed!");
+    logPrintln("Restart in 3 sec ...");
     delay(3000);
     ESP.restart();
   }
   if (MDNS.begin(MDNS_NAME))
   {
+    logPrintln("mDNS active:");
+    snprintf(logMsg, sizeof(logMsg), "http://%s.local/\n", MDNS_NAME);
+    logPrint(logMsg);
     DEBUG_PRINTF("mDNS aktiv: http://%s.local/\n", MDNS_NAME);
   }
 }

@@ -43,7 +43,8 @@ void udpListen() {
     snprintf(s.outdoorTempString, sizeof(s.outdoorTempString),
                   "%.1f\xB0""C", s.outdoorTemp);
     s.tempWatchdogTimer = millis() + TEMP_WATCHDOG_MS;
-    s.updIndicatorCycles = 4;
+    //s.updIndicatorCycles = 16;
+    s.nextUdpSendIndicatorHide = millis() + 400;
   }
 }
 
