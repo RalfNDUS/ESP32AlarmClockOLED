@@ -1,7 +1,8 @@
 #include <Arduino.h>
+#include "main.h"
 #include <time.h>
 #include "global.h"
-#include "timeHelper.h"
+#include "time_helper.h"
 
 static constexpr unsigned long TIME_REFRESH_MS = 50;
 
@@ -15,7 +16,7 @@ static void ntpSetupOnce() {
     delay(200);
   }
   if (!ok) {
-    //Serial.println("Set local time failed! Restart in 3 sec ...");
+    DEBUG_PRINTLN("Set local time failed! Restart in 3 sec ...");
     delay(3000);
     ESP.restart();
   }
@@ -23,7 +24,7 @@ static void ntpSetupOnce() {
   // Save current hour for triggering next update
   s.lastUpdateHour = lt.tm_hour;
 
-  //Serial.printf("Successful setting local time. (%0d)\n", s.lastUpdateHour);
+  DEBUG_PRINTF("Successful setting local time. (%0d)\n", s.lastUpdateHour);
 }
 
 void timeSetupOrDie() {

@@ -18,9 +18,9 @@ void onWiFiEvent(WiFiEvent_t event, WiFiEventInfo_t info)
     case ARDUINO_EVENT_WIFI_STA_STOP:            DEBUG_PRINTLN("WiFi clients stopped"); break;
     case ARDUINO_EVENT_WIFI_STA_CONNECTED:       DEBUG_PRINTLN("Connected to access point"); break;
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:    
-      // DEBUG_PRINT("Disconnected from WiFi access point. Reason: "); 
-      // DEBUG_PRINT(info.wifi_sta_disconnected.reason);
-      // DEBUG_PRINTLN(" -> Trying to Reconnect ...");
+      DEBUG_PRINT("Disconnected from WiFi access point. Reason: "); 
+      DEBUG_PRINT(info.wifi_sta_disconnected.reason);
+      DEBUG_PRINTLN(" -> Trying to Reconnect ...");
       WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
       break;
     case ARDUINO_EVENT_WIFI_STA_AUTHMODE_CHANGE: DEBUG_PRINTLN("Authentication mode of access point has changed"); break;

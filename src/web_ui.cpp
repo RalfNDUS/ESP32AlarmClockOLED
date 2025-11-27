@@ -100,25 +100,14 @@ String javaScript() {
 }
 
 String htmlFooter() {
-//  return R"====(<footer><a href="/refresh" class="btn btn-secondary">Aktualisieren</a></footer></div></body></html>)====";
   return R"====(</div></body></html>)====";
 }
 
 String htmlIndex() {
   auto& s = appState();
-  time_t now = time(nullptr);
-  struct tm lt;
-  localtime_r(&now, &lt);
-  const bool valid = (now > 8);
-
-  // String currentTime = valid ? (String(pad2(lt.tm_hour)) + ":" + pad2(lt.tm_min) + ":" + pad2(lt.tm_sec))
-  //                            : String("Zeit wird synchronisiert…");
-  // String currentDate = valid ? (String(pad2(lt.tm_mday) + "." + pad2(lt.tm_mon + 1) + "." + String(1900 + lt.tm_year)))
-  //                            : String("Datum wird synchronisiert…");
 
   String currentTime = s.currentTimeString;
   String currentDate = s.currentDateString;
-
   String h;
 
   h += htmlHeader("ESP32 AlarmClock");

@@ -54,42 +54,12 @@ void webServerStart() {
       saveState();
 
       DEBUG_PRINTF("Alarm 1: %02d:%02d %d\tAlarm 2: %02d:%02d %d\n", a1h, a1m, a1e, a2h, a2m, a2e);
-      //DEBUG_PRINTF("currentTime: %d\t", s.currentTime);
       DEBUG_PRINTF("Alarm1: %d\t", s.alarm1Time);
       DEBUG_PRINTF("Alarm2: %d\t", s.alarm2Time);
       DEBUG_PRINTF("lastTriggeredAlarm: %d\n", s.lastTriggeredAlarm);
     }
     request->redirect("/");
   });
-
-  // server.on("/data", HTTP_GET, [](AsyncWebServerRequest *req){
-  //   DEBUG_PRINTLN("Web Server request received: GET /data");
-  //   time_t now = time(nullptr);
-  //   struct tm lt;
-  //   localtime_r(&now, &lt);
-  //   bool valid = now > 8;
-
-  //   String currentTime = valid ? (String(pad2(lt.tm_hour)) + ":" + pad2(lt.tm_min) + ":" + pad2(lt.tm_sec))
-  //                              : String("Zeit wird synchronisiert…");
-  //   String currentDate = valid ? (String(pad2(lt.tm_mday) + "." + pad2(lt.tm_mon + 1) + "." + String(1900 + lt.tm_year)))
-  //                              : String("Datum wird synchronisiert…");
-
-  //   String json = "{";
-  //   json += "\"time\":\"" + currentTime + "\",";
-  //   json += "\"date\":\"" + currentDate + "\",";
-  //   float t = isnan(appState().outdoorTemp) ? NAN : appState().outdoorTemp;
-  //   json += "\"outdoorTemp\":" + String(t, 1);
-
-  //   #if defined(ESP32ALARMCLOCK) && !defined(NO_BME280) 
-  //     json +=  + ",";
-  //     float i = isnan(appState().indoorTemp) ? NAN : appState().indoorTemp;
-  //     float p = isnan(appState().indoorPres) ? NAN : appState().indoorPres;
-  //     json += "\"indoorTemp\":" + String(i, 1) + ",";
-  //     json += "\"indoorPres\":" + String(p, 0);
-  //   #endif
-  //   json += "}";
-  //   req->send(200, "application/json", json);
-  // });
 
   server.begin();
   DEBUG_PRINTLN("done.");

@@ -19,17 +19,8 @@ constexpr int BUTTON_PIN = 3;
 #define I2C_SDA 8
 #define I2C_SCL 9
 
-// ---- Timer-Intervalle ----
-constexpr unsigned int  BUZZER_INTERVAL_MS = 300;
-
-
 // Zentraler, gemeinsam genutzter Zustand
 struct AppState {
-  int lastUpdateHour = -1;
-  bool timeUpdateRequired = false;
-  bool sleepDisplay = false; 
-
-  bool activeAlarm = false;
 
   // Time-related
   unsigned int currentTime = 0;   // Military format HHMM
@@ -37,27 +28,8 @@ struct AppState {
   char currentDateString[12];
   bool isDaytime = false;
   unsigned long nextTimeRefresh = 0;
-
-  // Display-related
-  uint8_t currentPage = 0;
-  unsigned long nextDisplayRefresh = 0;
-  uint8_t brightnessIndex = 1;
-
-  // Sensor-reöated
-  byte deviceCountDS1820 = 0;
-  float outdoorTemp = NAN;   // DS18B20 (Außen)
-  float outdoorTempMin = NAN;
-  float outdoorTempMax = NAN;
-  char outdoorTempString[12];
-  bool  tempReqPending = false;
-  unsigned long nextSensorsPoll = 0;
-
-  // UDP-related
-  bool udpActive = false;
-  // unsigned long nextUdpPacketSend = 0;
-  unsigned long nextUdpSendIndicatorHide = 0;
-  unsigned int updIndicatorCycles = 0;
-  unsigned long tempWatchdogTimer = 0;
+  int lastUpdateHour = -1;
+  bool timeUpdateRequired = false;
 
   // Alarm Clock-related
   unsigned int alarm1Time = 0;
@@ -69,6 +41,23 @@ struct AppState {
   bool alarmTriggered = false;
   unsigned int lastTriggeredAlarm = 0;
   
+  // Display-related
+  unsigned long nextDisplayRefresh = 0;
+  uint8_t brightnessIndex = 1;
+
+  // Sensor-reöated
+  float outdoorTemp = NAN;   // DS18B20 (Außen)
+  char outdoorTempString[12];
+  float outdoorTempMin = NAN;
+  float outdoorTempMax = NAN;
+  bool  tempReqPending = false;
+  unsigned long nextSensorsPoll = 0;
+
+  // UDP-related
+  bool udpActive = false;
+  unsigned long nextUdpSendIndicatorHide = 0;
+  unsigned long tempWatchdogTimer = 0;
+
 };
 
 AppState& appState(); // Singleton-Zugriff

@@ -6,7 +6,7 @@
 #include <cmath>
 #include "main.h"
 #include "global.h"
-#include "timeHelper.h"
+#include "time_helper.h"
 
 static U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(OLED_ROTATION, U8X8_PIN_NONE);
 
@@ -62,13 +62,7 @@ void refreshOLED() {
   auto& s = appState();
 
   if (millis() < s.nextDisplayRefresh) return;
-
-  //char line[24];
-  int xPos = 0;
-
-  //snprintf(line, sizeof(line), "%.1f%cC", s.outdoorTemp, 0xB0);
-  xPos = (s.outdoorTemp > 0.0 && s.outdoorTemp < 10.0) ? 30 : 22;
-
+ 
   uint8_t contrast = (s.isDaytime) ? 255 : 1;
   u8g2.setContrast(contrast);
 
