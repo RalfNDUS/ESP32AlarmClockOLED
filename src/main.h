@@ -1,4 +1,4 @@
-#define APP_DEBUG       // uncomment for serial debug
+//#define APP_DEBUG       // uncomment for serial debug
 
 #ifdef APP_DEBUG
   #define DEBUG_PRINT(x)         Serial.print(x)

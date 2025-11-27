@@ -8,11 +8,7 @@
 #include "global.h"
 #include "timeHelper.h"
 
-#ifdef SH1106_OLED
-  static U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(OLED_ROTATION, U8X8_PIN_NONE);
-#else
-  static U8G2_SSD1306_128X64_NONAME_1_HW_I2C u8g2(OLED_ROTATION, U8X8_PIN_NONE);
-#endif
+static U8G2_SH1106_128X64_NONAME_1_HW_I2C u8g2(OLED_ROTATION, U8X8_PIN_NONE);
 
 static U8G2LOG u8log;
 static const uint8_t U8LOG_WIDTH=32, U8LOG_HEIGHT=10;
@@ -20,48 +16,33 @@ static uint8_t u8log_buffer[U8LOG_WIDTH*U8LOG_HEIGHT];
 
 static constexpr unsigned long DISPLAY_REFRESH_MS = 50;
 
-// // Minuten (0..1439) aus Stundenbruch
-// static int hmToMinutes(double h) {
-//   if (isnan(h)) return -1;
-//   int hh = (int)floor(h);
-//   int mm = (int)floor((h - hh) * 60.0 + 0.5);
-//   return hh*60 + (mm%60);
-// }
-
-void drawDayNightIcon(int x, int y, bool dayIcon) {
-  u8g2.setFont(u8g2_font_open_iconic_weather_2x_t); // 32x32 px
-  u8g2.setFontMode(1); // transparent
-
-  const uint16_t GLYPH_SUN  = 69;
-  const uint16_t GLYPH_MOON = 66;
-
-  // y ist Baseline → +32, um oben auszurichten
-  //int yPos = (dayIcon) ? 22 : 32;
-  u8g2.drawGlyph(110, 18, dayIcon ? GLYPH_SUN : GLYPH_MOON);
-}
-
-void drawAlarmIcon(const int num) {
-  u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t); // 32x32 px
-  u8g2.setFontMode(1); // transparent
-
-  const uint16_t GLYPH_ALARM  = 65;
-  int yPos = (num == 1) ? 51 : 63;
-  // y ist Baseline → +32, um oben auszurichten
-  u8g2.drawGlyph(86, yPos, GLYPH_ALARM);
-}
-
-void drawAlarmTime(const int alarmNo, const char* alarmTime) {
-  u8g2.setFont(u8g2_font_6x12_mf);
-  u8g2.setFontMode(1); // transparent
-  int yPos = (alarmNo == 1) ? 50 : 62;
-  u8g2.drawStr(96, yPos, alarmTime);
-}
-
 void logPrint(const String& msg) {
     u8log.print(msg);
 }
 void logPrintln(const String& msg) {
     u8log.println(msg);
+}
+
+void drawDayNightIcon(bool isDay) {
+  u8g2.setFont(u8g2_font_open_iconic_weather_2x_t); // 32x32 px
+  const uint16_t GLYPH_SUN  = 69;
+  const uint16_t GLYPH_MOON = 66;
+  u8g2.drawGlyph(110, 18, isDay ? GLYPH_SUN : GLYPH_MOON);
+}
+
+void drawAlarmIcons(const bool a1enabled, const bool a2enabled) {
+  u8g2.setFont(u8g2_font_open_iconic_embedded_1x_t); // 32x32 px
+  const uint16_t GLYPH_ALARM  = 65;
+  if (a1enabled) u8g2.drawGlyph(90, 51, GLYPH_ALARM);
+  if (a2enabled) u8g2.drawGlyph(90, 63, GLYPH_ALARM);
+}
+
+void drawAlarmTimes(const char* alarmTime1, const char* alarmTime2) {
+  u8g2.setFont(u8g2_font_finderskeepers_tn);
+  int width = u8g2.getStrWidth(alarmTime1);
+  int xPos = 126 - width;  
+  u8g2.drawStr(xPos, 50, alarmTime1);
+  u8g2.drawStr(xPos, 62, alarmTime2);
 }
 
 void initOLED() {
@@ -82,10 +63,10 @@ void refreshOLED() {
 
   if (millis() < s.nextDisplayRefresh) return;
 
-  char line[24];
+  //char line[24];
   int xPos = 0;
 
-  snprintf(line, sizeof(line), "%.1f%cC", s.outdoorTemp, 0xB0);
+  //snprintf(line, sizeof(line), "%.1f%cC", s.outdoorTemp, 0xB0);
   xPos = (s.outdoorTemp > 0.0 && s.outdoorTemp < 10.0) ? 30 : 22;
 
   uint8_t contrast = (s.isDaytime) ? 255 : 1;
@@ -93,22 +74,24 @@ void refreshOLED() {
 
   u8g2.firstPage();
   do {
+    // time
+    u8g2.setFont(u8g2_font_logisoso30_tn);
+    int width = u8g2.getStrWidth(s.currentTimeString);
+    int xPos = 103 - width;
+    u8g2.drawStr(xPos, 32, s.currentTimeString);
 
-    u8g2.setFont(u8g2_font_logisoso30_tf);
-    u8g2.drawStr(14, 32, s.currentTimeString);
+    // temperature
     u8g2.setFont(u8g2_font_logisoso18_tf);
-    u8g2.drawStr(xPos, 62, line);
-    //if (s.udpActive) u8g2.drawDisc(3, 3, 2, U8G2_DRAW_ALL);
-
-    if (millis() < s.nextUdpSendIndicatorHide) {
-      u8g2.drawDisc(3, 3, 2, U8G2_DRAW_ALL);
-      s.updIndicatorCycles--;
-    }
-    drawDayNightIcon(110, 27, s.isDaytime);
-    drawAlarmTime(1, s.alarm1TimeStr.c_str());
-    drawAlarmTime(2, s.alarm2TimeStr.c_str());
-    if (s.alarm1Enabled) drawAlarmIcon(1);
-    if (s.alarm2Enabled) drawAlarmIcon(2);
+    width = u8g2.getStrWidth(s.outdoorTempString);
+    xPos = 83 - width;
+    u8g2.drawStr(xPos, 62, s.outdoorTempString);
+  
+    // symbols
+    if (millis() < s.nextUdpSendIndicatorHide) u8g2.drawDisc(3, 3, 2, U8G2_DRAW_ALL);  
+    drawDayNightIcon(s.isDaytime);
+    drawAlarmTimes(s.alarm1TimeStr.c_str(), s.alarm2TimeStr.c_str());
+    drawAlarmIcons(s.alarm1Enabled, s.alarm2Enabled);
+    if (millis() < s.nextUdpSendIndicatorHide) u8g2.drawDisc(3, 3, 2, U8G2_DRAW_ALL);  
 
   } while (u8g2.nextPage());
 

@@ -14,7 +14,7 @@
 #define MDNS_NAME    "esp32-alarmclock2"
 
 // ---- GPIO ----
-constexpr int BUZZER_PIN = 1;
+constexpr int BUZZER_PIN = 2;
 constexpr int BUTTON_PIN = 3;
 #define I2C_SDA 8
 #define I2C_SCL 9

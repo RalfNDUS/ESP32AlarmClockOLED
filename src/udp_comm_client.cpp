@@ -12,7 +12,7 @@ void udpSendHello() {
   udp.beginPacket(IPAddress(255,255,255,255), UDP_PORT);
   udp.write((const uint8_t*)helloMsg, strlen(helloMsg));
   udp.endPacket();
-  Serial.printf("%09lu: Sent UDP hello message\n", millis());
+  //Serial.printf("%09lu: Sent UDP hello message\n", millis());
 }
 
 void udpBegin() {
@@ -31,11 +31,11 @@ void udpListen() {
   buf[n] = '\0';
 
   if (strcmp(buf, "hello") == 0) {
-    Serial.printf("%09lu: Received 'hello' from %s\n", millis(), udp.remoteIP().toString().c_str());
+  //  Serial.printf("%09lu: Received 'hello' from %s\n", millis(), udp.remoteIP().toString().c_str());
     return;
   }
 
-  Serial.printf("%09lu: Received from %s: %s\n", millis(), udp.remoteIP().toString().c_str(), buf);
+  //Serial.printf("%09lu: Received from %s: %s\n", millis(), udp.remoteIP().toString().c_str(), buf);
 
   JsonDocument json;
   if (deserializeJson(json, buf) == DeserializationError::Ok) {
