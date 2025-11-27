@@ -21,6 +21,7 @@ void webServerStart() {
     if (!s.alarmTriggered) {
       s.alarmTriggered = true;  
     }
+    DEBUG_PRINTLN(s.alarmTriggered);
     request->redirect("/");
   });
 

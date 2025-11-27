@@ -39,7 +39,7 @@ void drawAlarmIcons(const bool a1enabled, const bool a2enabled) {
 
 void drawAlarmTimes(const char* alarmTime1, const char* alarmTime2) {
   u8g2.setFont(u8g2_font_finderskeepers_tn);
-  int width = u8g2.getStrWidth(alarmTime1);
+  int width = max(u8g2.getStrWidth(alarmTime1), u8g2.getStrWidth(alarmTime2));
   int xPos = 126 - width;  
   u8g2.drawStr(xPos, 50, alarmTime1);
   u8g2.drawStr(xPos, 62, alarmTime2);

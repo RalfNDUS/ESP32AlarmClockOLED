@@ -8,16 +8,14 @@
 #include "udp_comm_client.h"
 #include "web_server.h"
 
-//#define APP_DEBUG
-
 void setup()
 {
   delay(1000);
   #ifdef APP_DEBUG
-    // Serial.begin(115200); 
-    // while (!Serial)
-    //   delay(10);
-    // DEBUG_PRINTLN("ready.");
+    Serial.begin(115200); 
+    while (!Serial)
+      delay(10);
+    DEBUG_PRINTLN("ready.");
   #endif
   delay(2000);
   initBuzzer();

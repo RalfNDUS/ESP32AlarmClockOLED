@@ -11,11 +11,11 @@
   #define WIFI_PASSWORD "<your_wifi_password>"
 #endif
 #define TZ_EU_BERLIN "CET-1CEST,M3.5.0/2,M10.5.0/3"
-#define MDNS_NAME    "esp32-alarmclock2"
+#define MDNS_NAME    "esp32-alarmclock"
 
 // ---- GPIO ----
-constexpr int BUZZER_PIN = 2;
-constexpr int BUTTON_PIN = 3;
+constexpr int BUZZER_PIN = 3;
+constexpr int BUTTON_PIN = 2;
 #define I2C_SDA 8
 #define I2C_SCL 9
 
